@@ -1,6 +1,6 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+
 
 namespace SuperHeroAPI.Controllers
 {
@@ -8,27 +8,12 @@ namespace SuperHeroAPI.Controllers
     [ApiController]
     public class SuperHeroController : ControllerBase
     {
-        private static List<SuperHero> heroes = new List<SuperHero>
-        {
-            new SuperHero
-            {
-                Id = 2,
-                Name = "Ironman",
-                FirstName = "Tony",
-                LastName = "Stark",
-                Place = "Long Island"
-            },
-
-        };
-
         private readonly DataContext _context;
 
         public SuperHeroController(DataContext context)
         {
             _context = context;
         }
-
-
 
         // GET /SuperHero/{id}
         [HttpGet()]
@@ -51,8 +36,13 @@ namespace SuperHeroAPI.Controllers
         [HttpPost]
         public async Task<ActionResult<List<SuperHero>>> AddHero(SuperHero hero)
         {
-            _context.SuperHeroes.Add(hero);
+            var dbHero = await _context.SuperHeroes.FirstOrDefaultAsync(sh => sh.Name == hero.Name);
+            if(dbHero is not null)
+            {
+				return BadRequest("There is already a hero with the same name");
+			}
 
+			_context.SuperHeroes.Add(hero);
             await _context.SaveChangesAsync();
             return Ok(await _context.SuperHeroes.ToListAsync());
         }
