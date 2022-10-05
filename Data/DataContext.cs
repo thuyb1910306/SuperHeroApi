@@ -9,6 +9,11 @@ namespace SuperHeroAPI.Data
 
         }
 
-        public DbSet<SuperHero> SuperHeroes { get; set; }
+        public DbSet<SuperHero> SuperHeroes { get; set; } = default!;
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.ApplyConfigurationsFromAssembly(typeof(DataContext).Assembly);
+        }
     }
 }
