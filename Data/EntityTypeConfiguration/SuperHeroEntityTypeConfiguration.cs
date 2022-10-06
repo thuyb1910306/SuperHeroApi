@@ -8,7 +8,7 @@ namespace SuperHeroAPI.Data.EntityTypeConfiguration
 		public void Configure(EntityTypeBuilder<SuperHero> builder)
 		{
 			builder
-				.ToTable("SuperHero");
+				.ToTable("SuperHeroes");
 
 			builder
 				.Property(x => x.Id)
